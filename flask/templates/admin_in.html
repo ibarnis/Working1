@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>New Registration Details</title>
+	<button onclick="location.href='/'">Go to Homepage</button>
+    <style>
+      table {
+        border-collapse: collapse;
+      }
+      td {
+        padding: 5px;
+        border: 1px solid black;
+      }
+      img {
+        max-width: 500px;
+        max-height: 500px;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>New Registration Details</h1>
+    {% for request in data %}
+    <table>
+      <tr>
+        <td><b>Name:</b></td>
+        <td>{{ request.name }}</td>
+      </tr>
+      <tr>
+        <td><b>Email:</b></td>
+        <td>{{ request.email }}</td>
+      </tr>
+      <tr>
+        <td><b>Picture:</b></td>
+        <td>
+          {% if request.picture_base64 %}
+          {% set picture_base64 = "data:image/jpeg;base64," + request.picture_base64 %}
+          <img src="{{ picture_base64 }}" />
+          {% else %}
+          No picture available
+          {% endif %}
+        </td>
+      </tr>
+    </table>
+
+    <form action="/accept_registration" method="post">
+      <input type="hidden" name="email" value="{{ request.email }}">
+      <input type="submit" value="Accept">
+    </form>
+    <form action="/deny_registration" method="post">
+      <input type="hidden" name="email" value="{{ request.email }}">
+      <input type="submit" value="Deny">
+    </form>
+    {% endfor %}
+  </body>
+</html>

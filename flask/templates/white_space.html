@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>White Space</title>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<style>
+		body {
+			background-color: white;
+			color: black;
+			font-family: Arial, sans-serif;
+			padding: 20px;
+		}
+		h1 {
+			font-size: 2.5em;
+			margin-top: 0;
+			text-align: center;
+		}
+		.container {
+			display: flex;
+			flex-direction: column;
+			align-items: center;
+			justify-content: center;
+			height: 100%;
+		}
+		.btn {
+			display: inline-block;
+			background-color: blue;
+			color: white;
+			padding: 10px 20px;
+			border: none;
+			border-radius: 5px;
+			font-size: 1.2em;
+			cursor: pointer;
+			margin-bottom: 20px;
+		}
+		.btn:hover {
+			background-color: navy;
+		}
+	</style>
+</head>
+<body>
+	<div class="container">
+		<h1>Welcome to White Space</h1>
+		<p>Please select an option below:</p>
+		<button class="btn" onclick="playGames()">Play Games</button>
+		<button class="btn" onclick="chatWithOthers()">Chat with Others</button>
+	</div>
+	<script>
+		function playGames() {
+			window.location.href = "https://www.miniclip.com/games/en/";
+		}
+		function chatWithOthers() {
+			window.location.href = "https://www.discord.com/";
+		}
+	</script>
+</html>

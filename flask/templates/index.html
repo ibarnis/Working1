@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <title>Room Security</title>
+    <link rel="icon" type="image/x-icon" href="static/images/camera.ico">
+    <style>
+      /* Set background color and font family */
+      body {
+        background-image: url('static/images/ai.png');
+        font-family: 'Arial', sans-serif;
+      }
+      /* Center the content vertically and horizontally */
+      .container {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+      }
+      /* Add padding to the content */
+      .content {
+        padding: 20px;
+        background-color: #fff;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        border-radius: 5px;
+        text-align: center;
+      }
+      /* Add styling to the headings */
+      h1, h2 {
+        margin-top: 0;
+        margin-bottom: 10px;
+        font-weight: normal;
+        color: #333;
+      }
+      h1 {
+        font-size: 36px;
+      }
+      h2 {
+        font-size: 24px;
+      }
+      /* Add styling to the links */
+      a {
+        color: #007bff;
+        text-decoration: none;
+      }
+      a:hover {
+        color: #0056b3;
+        text-decoration: underline;
+      }
+      /* Add styling to the buttons */
+      .button {
+        display: inline-block;
+        padding: 10px 20px;
+        background-color: #007bff;
+        color: #fff;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+      }
+      .button:hover {
+        background-color: #0056b3;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <div class="content">
+        <h1>Secured working space-</h1>
+        <h2>Protecting You and your house with face recognition</h2>
+        <a href="Login.html" class="button">Admin Login</a>
+        <br><br>
+        <a href="Register.html" class="button">Register as User</a>
+		<form id="loading-form" method="post" action="/check_in_white_list">
+		  <input type="hidden" name="from_index" value="true">
+		  <button type="submit" class="button">Use our service</button>
+		</form>
+      </div>
+    </div>
+  </body>
+</html>

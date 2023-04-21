@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Chat Client</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+    }
+    h1 {
+      text-align: center;
+    }
+    #chatbox {
+      width: 80%;
+      height: 400px;
+      margin: 0 auto;
+      padding: 10px;
+      border: 1px solid #ccc;
+      overflow-y: scroll;
+    }
+    #chatbox p {
+      margin: 0;
+    }
+    #message {
+      width: 80%;
+      margin: 0 auto;
+      padding: 10px;
+      border: 1px solid #ccc;
+    }
+    #send {
+      margin-top: 10px;
+      padding: 10px;
+      background-color: #4CAF50;
+      color: white;
+      border: none;
+      cursor: pointer;
+    }
+    #send:hover {
+      background-color: #3E8E41;
+    }
+  </style>
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
+</head>
+<body>
+  <h1>Chat Client</h1>
+  <div id="chatbox"></div>
+  <form>
+    <input type="text" id="message" placeholder="Type a message...">
+    <input type="submit" id="send" value="Send">
+  </form>
+  <script>
+	type="module" import { DiffieHellman } from './Diffie_Hellman.js';
+	var client_id = Math.random().toString(36).substring(7); // generate a random client ID
+    var dh = new DiffieHellman(); // create a new Diffie-Hellman object
+    var publicKey = dh.generate_public_key(); // generate the client's public key
+	console.log(publicKey)
+    var sharedKey = null; // initialize the shared key to null
+    $(function() {
+      $.post('/register', {'client_id': client_id, 'public_key': publicKey}, function(data) {
+        if (data['status'] === 'ok') {
+          var serverPublicKey = data['public_key']; // get the server's public key
+          sharedKey = dh.generate_shared_key(serverPublicKey); // generate the shared key
+        }
+      });
+
+      $('form').submit(function(event) {
+        event.preventDefault();
+        var message = $('#message').val();
+        var iv = CryptoJS.lib.WordArray.random(16).toString(CryptoJS.enc.Base64); // generate a random IV
+        var ciphertext = aesEncrypt(message, sharedKey, iv); // encrypt the message with AES
+        $.post('/send', {'client_id': client_id, 'message': ciphertext[0], 'iv': ciphertext[1]});
+        $('#message').val('');
+      });
+
+      setInterval(getMessages, 1000); // get new messages every second
+    });
+
+    function getMessages() {
+      $.get('/get', {'client_id': client_id}, function(messages) {
+        $('#chatbox').empty();
+        for (var i = 0; i < messages.length; i++) {
+          var message = messages[i];
+          var plaintext = aesDecrypt(message['message'], sharedKey, message['iv']); // decrypt the message with AES
+          $('#chatbox').append('<p><strong>' + message['sender'] + ': </strong>' + plaintext + '</p>');
+        }
+        $('#chatbox').scrollTop($('#chatbox')[0].scrollHeight);
+      });
+    }
+
+    function aesEncrypt(plaintext, key, iv) {
+      iv = CryptoJS.enc.Base64.parse(iv);
+      key = CryptoJS.enc.Hex.parse(key);
+      var ciphertext = CryptoJS.AES.encrypt(plaintext, key, { iv: iv, mode: CryptoJS.mode.CTR }).ciphertext;
+      return [ciphertext.toString(CryptoJS.enc.Base64), iv.toString(CryptoJS.enc.Base64)];
+    }
+
+    function aesDecrypt(ciphertext, key, iv) {
+      iv = CryptoJS.enc.Base64.parse(iv);
+      key = CryptoJS.enc.Hex.parse(key);
+      ciphertext = CryptoJS.enc.Base64.parse(ciphertext);
+      var plaintext = CryptoJS.AES.decrypt({ ciphertext: ciphertext }, key, { iv: iv, mode: CryptoJS.mode.CTR }).toString(CryptoJS.enc.Utf8);
+      return plaintext;
+    }
+ </script>
+</body>
+</html>

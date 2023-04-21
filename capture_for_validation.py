@@ -121,6 +121,8 @@ class Capture_And_Compare():
 			if (found_time - begin_time >=10) or (current_conf>=0.995) :
 				print("MTCNN DONE!")
 				break
+		cap.release()
+		
 		white =[]
 		found=0
 		for face in faces:
@@ -138,7 +140,6 @@ class Capture_And_Compare():
 				found=1
 			print('Finished processing. Release resources.')
 		
-		cap.release()
 		cv2.destroyAllWindows()
 		print("returning found", found)
 		return found

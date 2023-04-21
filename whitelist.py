@@ -232,16 +232,18 @@ def get_all_embeddings():
 	cur.execute("SELECT * FROM white")
 	rows = cur.fetchall()
 	list_embeddings = []
+	list_names=[]
 	for row in rows:
 		print("old: ", row[3])
 		array=convert_array(row[3])
-
+		name=(row[0])
 		#array= array.flatten()
 		#print("old flattened: ", array)
 		list_embeddings.append(array)
+		list_names.append(name)
 		
 	conn.close()
-	return list_embeddings
+	return list_embeddings,list_names
 
 
 
@@ -282,19 +284,20 @@ def read_embeddings(blob):
 
 def is_white(new_embedding):
 	print("new_embedding:",new_embedding)
-	known_embeddings = get_all_embeddings()
-	
+	known_embeddings,names = get_all_embeddings()
+	counter=0
 	for embedding in known_embeddings:
 		if embedding is None:
 			continue
+		
 		print("embedding: ", embedding)
 		print("embedding={}".format(embedding))
 		print("embedding.shape: {}; len(embedding.shape): {}".format(embedding.shape, len(embedding.shape)))
 		if is_match(embedding, new_embedding):
-			return True
+			return True,names[counter]
+		counter+=1
 	return False
 
 		
 if __name__ == '__main__':
 	main()
-	get_index("itay")

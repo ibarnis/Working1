@@ -1,0 +1,25 @@
+	# Receive messages from the client and broadcast them to all connected clients
+	if is_valid_client():
+		while True:
+			try:
+				print("i am reciving")
+				encrypted_data = client.recv(1024)
+				print("recived")
+				iv = encrypted_data[:16]
+				ciphertext = encrypted_data[16:]
+				print("!!!!!")
+				plaintext_data = aes_decrypt(shared_key, ciphertext.decode(), iv)
+				print(plaintext_data)
+				print("here server")
+				broadcast_message(plaintext_data,shared_key)
+
+			except Exception as e:
+				# Client has disconnected
+				print("exception!",e)
+				clients.remove(client)
+				client.close()
+				break
+	else:
+		print("client is a threat!")
+		clients.remove(client)
+		client.close()

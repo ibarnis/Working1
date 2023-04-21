@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>use service has admin</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="static/css/main.css" rel="stylesheet" media="screen">
+  </head>
+  <body>
+    <div id="main-holder">
+      <div id="login-form">
+        <h1>Log In</h1>
+        <form action="/login2.html" method="post">
+          <input class="login-form-field" type="text" placeholder="Username" name="username" value="{{ request.form.username }}">
+          <input class="login-form-field" type="password" placeholder="Password" name="password" value="{{ request.form.password }}">
+          <input class="login-form-submit" type="submit" value="Log In">
+        </form>
+        {% if error %}
+        <div id="login-error-msg-holder">
+          <p id="login-error-msg"><strong>Error:</strong> {{ error }}</p>
+        </div>
+        {% endif %}
+      </div>
+      <div id="button-holder">
+        <button class="login-form-button" onclick="window.location.href='/client_send_pic.html'">Enter as User</button>
+      </div>
+    </div>
+    <p><a href="index.html">Home</a></p>
+  </body>
+</html>

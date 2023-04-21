@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Face Detection</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script type="text/javascript">
+
+        // This function sends the current video frame to the server for processing
+        function process_frame() {
+            // Get the current video frame from the canvas
+            var canvas = document.getElementById('video-canvas');
+            var dataURL = canvas.toDataURL('image/jpeg', 0.5);
+
+            // Send the video frame to the server
+            $.ajax({
+                type: 'POST',
+                url: '/process_frame',
+                data: {'frame': dataURL},
+                success: function(response) {
+                    // Check if a face was detected
+                    if (response == '1') {
+                        // Redirect to user.html if a face was detected
+                        window.location.href = 'user.html';
+                    }
+                }
+            });
+        }
+
+        $(document).ready(function() {
+            // Check if getUserMedia is supported
+            if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+                // Ask for camera permission
+                navigator.mediaDevices.getUserMedia({
+                    video: true,
+                    audio: false
+                })
+                .then(function(stream) {
+                    // Set the video source to the user's camera stream
+                    var video = document.getElementById('video');
+                    video.srcObject = stream;
+
+                    // Play the video stream
+                    video.onloadedmetadata = function(e) {
+                        video.play();
+                    };
+
+                    // Draw the video stream to the canvas every 100ms
+                    var canvas = document.getElementById('video-canvas');
+                    var context = canvas.getContext('2d');
+                    setInterval(function() {
+                        context.drawImage(video, 0, 0, canvas.width, canvas.height);
+                        process_frame();
+                    }, 100);
+                })
+                .catch(function(err) {
+                    console.log('Error: ' + err);
+                });
+            } else {
+                console.log('getUserMedia not supported');
+            }
+        });
+
+    </script>
+</head>
+<body>
+    <video id="video" width="640" height="480" style="display: none;"></video>
+    <canvas id="video-canvas" width="640" height="480"></canvas>
+</body>
+</html>

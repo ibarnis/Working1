@@ -1,0 +1,19 @@
+/Home_security.html: This route returns the Home_security.html template when accessed.
+
+/generate-keys: This route generates a private key and a public key using the Diffie-Hellman key exchange algorithm and returns them as JSON.
+
+/generate-shared-key: This route generates a shared key using the local private key and the remote public key passed as arguments and returns the shared key as JSON.
+
+/register_client: This route registers a new client with a generated username and a generated Diffie-Hellman key pair. The username and public key are returned as JSON.
+
+/users: This route returns a list of all online users.
+
+/message: This route sends an encrypted message from one user to another. The sender and recipient must be registered users. The message is encrypted using a shared key generated using the Diffie-Hellman key exchange algorithm. The encrypted message and the encrypted key are returned as JSON.
+
+/receive: This route receives an encrypted message sent to a user. The recipient must be a registered user. The shared key used to encrypt the message is decrypted using the recipient's private key. The decrypted message is returned as JSON.
+
+aes_encrypt: This function encrypts plaintext using the AES-CBC algorithm with a given key and returns the base64 encoded ciphertext and initialization vector (IV).
+
+aes_decrypt: This function decrypts ciphertext that was encrypted with AES-CBC using a given key. The ciphertext is expected to be base64 encoded, with the IV prepended.
+
+broadcast_message: This function sends a message to all connected clients.
